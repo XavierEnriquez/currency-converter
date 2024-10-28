@@ -35,7 +35,7 @@ code {
   align-items: center;
   gap: 1rem;
 }
-.converter_component h1 {
+.converter_component h1 p {
   line-height: 1;
 }
 .converter_component p {
