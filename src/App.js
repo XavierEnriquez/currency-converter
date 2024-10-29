@@ -8,18 +8,18 @@ export function App() {
   const [currencies, setCurrencies] = useState([]);
   const [output, setOutput] = useState("");
   const [amount, setAmount] = useState(1);
-  const [from, setFrom] = useState("USD");
-  const [to, setTo] = useState("EUR");
+  const [fromCur, setFromCur] = useState("USD");
+  const [toCur, setToCur] = useState("EUR");
 
   function handleAmount(amount) {
     setAmount(amount);
   }
 
-  function handleFrom(from) {
-    setFrom(from);
+  function handleFromCur(fromCur) {
+    setFromCur(fromCur);
   }
-  function handleTo(to) {
-    setTo(to);
+  function handleToCur(toCur) {
+    setToCur(toCur);
   }
 
   useEffect(() => {
@@ -44,17 +44,17 @@ export function App() {
     async function currData() {
       try {
         const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${amount}&base=${from}&symbols=${to}`
+          `https://api.frankfurter.app/latest?amount=${amount}&base=${fromCur}&symbols=${toCur}`
         );
         if (!res.ok) throw new Error("Something went wrong!");
         const data = await res.json();
-        setOutput(data.rates[to].toFixed(2));
+        setOutput(data.rates[toCur].toFixed(2));
       } catch (error) {
         console.log(error.message);
       }
     }
     currData();
-  }, [amount, from, to]);
+  }, [amount, fromCur, toCur]);
 
   return (
     <div className="app">
@@ -68,8 +68,8 @@ export function App() {
           />
           <CurrencySelect
             onName="select-from"
-            onValue={from}
-            onHandle={(e) => handleFrom(e.target.value)}
+            onValue={fromCur}
+            onHandle={(e) => handleFromCur(e.target.value)}
             children
           >
             {currencies.map((el, i) => (
@@ -83,12 +83,12 @@ export function App() {
           <div>To</div>
           <CurrencySelect
             onName="select-to"
-            onValue={to}
-            onHandle={(e) => handleTo(e.target.value)}
+            onValue={toCur}
+            onchange={(e) => handleToCur(e.target.value)}
             children
           >
             {currencies
-              .filter((el) => el.key !== from)
+              .filter((el) => el.key !== fromCur)
               .map((el, i) => (
                 <CurrencyOption key={el.key} onValue={el.key} children>
                   {el.value}({el.key})
@@ -96,7 +96,7 @@ export function App() {
               ))}
           </CurrencySelect>
         </div>
-        <Output output={output} to={to} />
+        <Output output={output} to={toCur} />
       </form>
     </div>
   );
