@@ -5,7 +5,11 @@ export default function CurrencySelect({
   children,
 }) {
   return (
-    <select name={onName} value={onValue} onChange={onHandle}>
+    <select
+      name={onName}
+      value={onValue}
+      onChange={(e) => onHandle(e.target.value)}
+    >
       {children}
     </select>
   );

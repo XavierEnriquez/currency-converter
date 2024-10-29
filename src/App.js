@@ -69,7 +69,7 @@ export function App() {
           <CurrencySelect
             onName="select-from"
             onValue={fromCur}
-            onHandle={(e) => handleFromCur(e.target.value)}
+            onHandle={handleFromCur}
             children
           >
             {currencies.map((el, i) => (
@@ -84,7 +84,7 @@ export function App() {
           <CurrencySelect
             onName="select-to"
             onValue={toCur}
-            onchange={(e) => handleToCur(e.target.value)}
+            onHandle={handleToCur}
             children
           >
             {currencies
