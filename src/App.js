@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import AmountInput from "./utils/amount-input";
+import CurrencySelect from "./utils/currency-select";
+import CurrencyOption from "./utils/currency-option";
+import Output from "./utils/output";
 
-function App() {
+export function App() {
   const [currencies, setCurrencies] = useState([]);
   const [output, setOutput] = useState("");
   const [amount, setAmount] = useState(1);
@@ -57,44 +61,42 @@ function App() {
       <form name="converter" className="converter_component">
         <h1>Currency Converter</h1>
         <div>
-          <input
-            name="number-input"
-            type="number"
-            min="1"
-            value={amount}
-            onChange={(e) => handleAmount(e.target.value)}
+          <AmountInput
+            onName="amount-input"
+            onValue={amount}
+            onHandleAmount={handleAmount}
           />
-          <select
-            name="from-select"
-            value={from}
-            onChange={(e) => handleFrom(e.target.value)}
+          <CurrencySelect
+            onName="select-from"
+            onValue={from}
+            onHandle={(e) => handleFrom(e.target.value)}
+            children
           >
             {currencies.map((el, i) => (
-              <option key={el.key} value={el.key}>
-                {el.value} ({el.key})
-              </option>
+              <CurrencyOption key={el.key} onValue={el.key} children>
+                {el.value}({el.key})
+              </CurrencyOption>
             ))}
-          </select>
+          </CurrencySelect>
         </div>
         <div>
           <div>To</div>
-          <select
-            name="to-select"
-            value={to}
-            onChange={(e) => handleTo(e.target.value)}
+          <CurrencySelect
+            onName="select-to"
+            onValue={to}
+            onHandle={(e) => handleTo(e.target.value)}
+            children
           >
             {currencies
               .filter((el) => el.key !== from)
               .map((el, i) => (
-                <option key={el.key} value={el.key}>
-                  {el.value} ({el.key})
-                </option>
+                <CurrencyOption key={el.key} onValue={el.key} children>
+                  {el.value}({el.key})
+                </CurrencyOption>
               ))}
-          </select>
+          </CurrencySelect>
         </div>
-        <p>
-          {output} {to}
-        </p>
+        <Output output={output} to={to} />
       </form>
     </div>
   );
