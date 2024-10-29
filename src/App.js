@@ -3,6 +3,7 @@ import AmountInput from "./utils/amount-input";
 import CurrencySelect from "./utils/currency-select";
 import CurrencyOption from "./utils/currency-option";
 import Output from "./utils/output";
+import Loading from "./utils/loading";
 
 export function App() {
   const [currencies, setCurrencies] = useState([]);
@@ -10,6 +11,8 @@ export function App() {
   const [amount, setAmount] = useState(1);
   const [fromCur, setFromCur] = useState("USD");
   const [toCur, setToCur] = useState("EUR");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleAmount(amount) {
     setAmount(amount);
@@ -25,6 +28,7 @@ export function App() {
   useEffect(() => {
     async function getCurrencies() {
       try {
+        setIsLoading(true);
         const res = await fetch(`https://api.frankfurter.app/currencies`);
         if (!res.ok) throw new Error("Something went wrong!");
         const data = await res.json();
@@ -33,6 +37,7 @@ export function App() {
           value: data[key],
         }));
         setCurrencies(currenciesArr);
+        setIsLoading(false);
       } catch (error) {
         console.log(error.message);
       }
@@ -43,12 +48,14 @@ export function App() {
   useEffect(() => {
     async function currData() {
       try {
+        setIsLoading(true);
         const res = await fetch(
           `https://api.frankfurter.app/latest?amount=${amount}&base=${fromCur}&symbols=${toCur}`
         );
         if (!res.ok) throw new Error("Something went wrong!");
         const data = await res.json();
         setOutput(data.rates[toCur].toFixed(2));
+        setIsLoading(false);
       } catch (error) {
         console.log(error.message);
       }
@@ -62,13 +69,15 @@ export function App() {
         <h1>Currency Converter</h1>
         <div>
           <AmountInput
-            onName="amount-input"
-            onValue={amount}
+            isDisabled={isLoading}
+            isName="amount-input"
+            isValue={amount}
             onHandleAmount={handleAmount}
           />
           <CurrencySelect
-            onName="select-from"
-            onValue={fromCur}
+            isDisabled={isLoading}
+            isName="select-from"
+            isValue={fromCur}
             onHandle={handleFromCur}
             children
           >
@@ -82,8 +91,9 @@ export function App() {
         <div>
           <div>To</div>
           <CurrencySelect
-            onName="select-to"
-            onValue={toCur}
+            isDisabled={isLoading}
+            isName="select-to"
+            isValue={toCur}
             onHandle={handleToCur}
             children
           >
@@ -96,7 +106,7 @@ export function App() {
               ))}
           </CurrencySelect>
         </div>
-        <Output output={output} to={toCur} />
+        {isLoading ? <Loading /> : <Output output={output} to={toCur} />}
       </form>
     </div>
   );

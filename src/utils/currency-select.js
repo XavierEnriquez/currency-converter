@@ -1,13 +1,15 @@
 export default function CurrencySelect({
-  onName,
-  onValue,
+  isDisabled,
+  isName,
+  isValue,
   onHandle,
   children,
 }) {
   return (
     <select
-      name={onName}
-      value={onValue}
+      disabled={isDisabled}
+      name={isName}
+      value={isValue}
       onChange={(e) => onHandle(e.target.value)}
     >
       {children}
